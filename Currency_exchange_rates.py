@@ -5,15 +5,15 @@ import requests
 
 def update_b_label(event):
     # Получаем полное название базовой валюты из словаря и обновляем метку
-    code = b_combobox.get()
+    code = base_combobox.get()
     name = currencies[code]
     b_label.config(text=name) # Обновляем текст метки
 
 
 def update_t_label(event):
     # Получаем полное название целевой валюты из словаря и обновляем метку
-    code = t_combobox.get()
-    name = cur[code]
+    code = target_combobox.get()
+    name = currencies[code]
     t_label.config(text=name)
 
 
@@ -58,17 +58,26 @@ def exchange():
 
 # Словарь кодов валют и их полных названий
 currencies = {
-    "USD": "Американский доллар",
-    "EUR": "Евро",
-    "JPY": "Японская йена",
-    "GBP": "Британский фунт стерлингов",
-    "AUD": "Австралийский доллар",
-    "CAD": "Канадский доллар",
-    "CHF": "Швейцарский франк",
-    "CNY": "Китайский юань",
-    "RUB": "Российский рубль",
-    "KZT": "Казахстанский тенге",
-    "UZS": "Узбекский сум"
+    'bitcoin': 'Биткоин (₿)',  # bitcoin — ключ, '₿' — символ Биткоина
+    'ethereum': 'Эфира (Ξ)',  # ethereum — ключ, 'Ξ' — символ Эфира
+    'tether': 'Tether (₮)',  # tether — ключ, '₮' — символ Tether
+    'binancecoin': 'Binance Coin (B)',  # binancecoin — ключ, 'B' — символ Binance Coin
+    'ripple': 'XRP (✕)',  # ripple — ключ, '✕' — символ XRP
+    'usd-coin': 'USD Coin ($)',  # usd-coin — ключ, '$' — символ USD Coin
+    'cardano': 'Cardano (₳)',  # cardano — ключ, '₳' — символ Cardano
+    'dogecoin': 'Dogecoin (Ð)',  # dogecoin — ключ, 'Ð' — символ Dogecoin
+    'solana': 'Solana (S)',  # solana — ключ, 'S' — символ Solana
+    'polkadot': 'Polkadot (●)',  # polkadot — ключ, '●' — символ Polkadot
+    'litecoin': 'Litecoin (Ł)',  # litecoin — ключ, 'Ł' — символ Litecoin
+    'tron': 'TRON (T)',  # tron — ключ, 'T' — символ TRON
+    'chainlink': 'Chainlink (⬡)',  # chainlink — ключ, '⬡' — символ Chainlink
+    'uniswap': 'Uniswap (🦄)',  # uniswap — ключ, '🦄' — символ Uniswap
+    'avalanche': 'Avalanche (A)',  # avalanche — ключ, 'A' — символ Avalanche
+    'matic-network': 'Polygon (M)',  # matic-network — ключ, 'M' — символ Polygon
+    'cosmos': 'Cosmos (C)',  # cosmos — ключ, 'C' — символ Cosmos
+    'monero': 'Monero (ɱ)',  # monero — ключ, 'ɱ' — символ Monero
+    'ethereum-classic': 'Ethereum Classic (E)',  # ethereum-classic — ключ, 'E' — символ Ethereum Classic
+    'near': 'NEAR Protocol (N)'  # near — ключ, 'N' — символ NEAR Protocol
 }
 
 # Создание графического интерфейса

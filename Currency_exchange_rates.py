@@ -16,28 +16,45 @@ def update_t_label(event):
     name = cur[code]
     t_label.config(text=name)
 
+
+
+# определяем функцию exchange для получения курса обмена
 def exchange():
-    target_code = target_combobox.get()
-    base_code = base_combobox.get()
+    target_code = target_combobox.get().strip()  # получаем и очищаем код целевой валюты
+    base_code = base_combobox.get().strip()  # получаем и очищаем код базовой валюты
 
-    if target_code and base_code:
-        try:
-            response = requests.get(f'https://open.er-api.com/v6/latest/{base_code}')
-            response.raise_for_status()
+    if target_code and base_code:  # проверяем, что обе валюты выбраны
+        try:  # начинаем блок обработки исключений
+            # CoinGecko API v3 — бесплатный эндпоинт
+            url = 'https://api.coingecko.com/api/v3/simple/price'  # задаём URL API CoinGecko
+            params = {  # создаём словарь с параметрами запроса
+                'ids': target_code + ',' + base_code,  # указываем ID двух валют через запятую
+                'vs_currencies': 'usd',  # запрашиваем цены в долларах США
+                'include_exchange_rate': 'true'  # включаем курс обмена в ответ
+            }
 
-            data = response.json()
+            response = requests.get(url, params=params)  # отправляем GET-запрос на сервер
+            response.raise_for_status()  # выбрасывает ошибку, если статус ответа не 200
+            data = response.json()  # парсим ответ сервера в формат JSON
 
-            if target_code in data['rates']:
-                exchange_rate = data['rates'][target_code]
-                base = currencies[base_code]
-                target = currencies[target_code]
-                mb.showinfo("Курс обмена", f"Курс {exchange_rate:.1f} {target} за 1 {base}")
-            else:
-                mb.showerror("Ошибка", f"Валюта {target_code} не найдена")
-        except Exception as e:
-            mb.showerror("Ошибка", f"Ошибка: {e}")
-    else:
-        mb.showwarning("Внимание", "Выберите коды валют")
+            # Получаем цены в USD
+            target_price_usd = data[target_code]['usd']  # получаем цену целевой валюты в USD
+            base_price_usd = data[base_code]['usd']  # получаем цену базовой валюты в USD
+
+            # Рассчитываем кросс-курс
+            exchange_rate = target_price_usd / base_price_usd  # вычисляем курс обмена
+
+            base_name = currencies[base_code]  # получаем название базовой валюты из словаря
+            target_name = currencies[target_code]  # получаем название целевой валюты из словаря
+
+            mb.showinfo('Курс обмена',  # показываем всплывающее окно с информацией
+                        f'1 {base_name} = {exchange_rate:.6f} {target_name}\n'  # строка: 1 базовая = курс целевая
+                        f'1 {target_name} = {1/exchange_rate:.6f} {base_name}')  # строка: 1 целевая = курс базовая
+
+        except Exception as er:  # перехватываем любую ошибку
+            mb.showerror('Ошибка', str(er))  # показываем всплывающее окно с текстом ошибки
+    else:  # если одна из валют не выбрана
+        mb.showwarning('Внимание', 'Выберите валюты')  # показываем предупреждение
 
 # Словарь кодов валют и их полных названий
 currencies = {
